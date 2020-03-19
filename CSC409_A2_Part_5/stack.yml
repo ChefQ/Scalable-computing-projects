@@ -1,0 +1,34 @@
+provider:
+  name: faas
+  provider: faas
+  gateway: http://127.0.0.1:8080
+
+functions:
+  youtubedl:
+    lang: Dockerfile
+    handler: ./youtube-dl
+    image: youtubedl:latest
+    environment:
+      combine_output: false
+      read_timeout: 3000
+      write_timeout: 3000
+      exec_timeout: 3000
+  audioextract:
+    lang: dockerfile
+    handler: ./audioextract
+    image: audioextract:latest
+    environment:
+      combine_output: false
+      read_timeout: 3000
+      write_timeout: 3000
+      exec_timeout: 3000
+  both:
+    lang: dockerfile
+    handler: ./both
+    image: both:latest
+    environment:
+      combine_output: false
+      read_timeout: 3000
+      write_timeout: 3000
+      exec_timeout: 3000
+

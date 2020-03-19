@@ -1,0 +1,7 @@
+test0001	https://www.google.com
+heyhey123	https://www.apple.com
+fruits	https://www.nofrills.com
+test5019	https://www.yahoo.com
+arnold	http://www.cs.toronto.edu/~arnold/
+abab	https://www.google.com
+bing	https://www.bing.com

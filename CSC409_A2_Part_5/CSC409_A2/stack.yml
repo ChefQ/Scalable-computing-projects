@@ -1,0 +1,25 @@
+provider:
+  name: faas
+  provider: faas
+  gateway: http://127.0.0.1:8080
+
+functions:
+  youtubedl:
+    lang: Dockerfile
+    handler: ./youtube-dl
+    image: alexellis2/faas-youtubedl:0.3
+    environment:
+      combine_output: false
+  audioextract:
+    lang: dockerfile
+    handler: ./audioextract
+    image: audioextract:latest
+  environment:
+      combine_output: false
+  both:
+    lang: dockerfile
+    handler: ./both
+    image: both:latest
+  environment:
+      combine_output: false
+
