@@ -6,15 +6,15 @@ var AWS = require("aws-sdk");
 AWS.config.update({
   region: "ca-central-1",
   endpoint: "https://dynamodb.ca-central-1.amazonaws.com",
-  accessKeyId: "AKIAIYXCGWSFABXPLNKA",
-  secretAccessKey: "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"
+  accessKeyId: "",
+  secretAccessKey: ""
 });
 
 const redis = require('redis'); // used for redis
 const client = redis.createClient(6379, 'place.tvsqkd.0001.cac1.cache.amazonaws.com'); //connecting to our redis server
 
 var docClient = new AWS.DynamoDB.DocumentClient();
- 
+
 /* var dim = 1000; // note: this is not the right dimensions!!
 var board=new Array(dim);
 for(var x=0;x<dim;x++){
@@ -38,7 +38,7 @@ wss.broadcast = function broadcast(data) {
   });
 };
 
-// for heartbeat to make sure connection is alive 
+// for heartbeat to make sure connection is alive
 function noop() {}
 function heartbeat() {
   this.isAlive = true;
@@ -47,13 +47,13 @@ function heartbeat() {
 function isValidSet(o){
 	var isValid=false;
 	try {
-	   isValid = 
+	   isValid =
 		Number.isInteger(o.x) && o.x!=null && 0<=o.x && o.x<dim &&
-		Number.isInteger(o.y) && o.y!=null && 0<=o.y && o.y<dim && 
-		Number.isInteger(o.colour) && o.colour != null && 0 <= o.colour && o.colour <= 15 
-	} catch (err){ 
-		isValid=false; 
-	} 
+		Number.isInteger(o.y) && o.y!=null && 0<=o.y && o.y<dim &&
+		Number.isInteger(o.colour) && o.colour != null && 0 <= o.colour && o.colour <= 15
+	} catch (err){
+		isValid=false;
+	}
 	return isValid;
 }
 
@@ -66,9 +66,9 @@ wss.on('connection', function(ws) {
 	client.get("board", function(err, reply) {
 		if(!err){
 			ws.send(JSON.stringify(Buffer.from(reply)));
-		}	
+		}
 	});
-	
+
 
 	// when we get a message from the client
 	ws.on('message', function(message) {
@@ -92,14 +92,14 @@ wss.on('connection', function(ws) {
 					{
 						Put: {
 								TableName: "user",
-								Item: {'username' : {S:clientMessage["username"]}, 
+								Item: {'username' : {S:clientMessage["username"]},
 									'userTimeStamp' : {S:String(currentDate)}}
 						}
 					},
 					{
 						Put: {
 								TableName: "place",
-								Item: {'coordinate': {S: "(" + clientMessage["x"] + "," + clientMessage["y"] + ")"}, 
+								Item: {'coordinate': {S: "(" + clientMessage["x"] + "," + clientMessage["y"] + ")"},
 									'colour': {S: String(clientMessage["colour"])},
 									'tileTimeStamp': {S: String(currentDate)},
 									'username': {S: clientMessage["username"]}}
@@ -112,7 +112,7 @@ wss.on('connection', function(ws) {
 			myPromise.then((data) => {
 				console.log(JSON.stringify(data));
 				console.log(new Date());
-					
+
 				if(data.Count == 0 || currentDate - (new Date(data.Items[0]["userTimeStamp"])) >= 30000) {
 					var dynamodb = new AWS.DynamoDB();
 					return dynamodb.transactWriteItems(myTransaction).promise();
@@ -139,7 +139,7 @@ wss.on('connection', function(ws) {
 const interval = setInterval(function ping() {
   wss.clients.forEach(function each(ws) {
     if (ws.isAlive === false) return ws.terminate();
- 
+
     ws.isAlive = false;
     ws.ping(noop);
   });
@@ -161,4 +161,3 @@ function getind(x,y) {
      //
 });
 }
-
